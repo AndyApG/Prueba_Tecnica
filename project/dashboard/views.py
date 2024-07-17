@@ -83,7 +83,7 @@ class ContratoView(LoginRequiredMixin,generic.ListView):
         columns_names_reversed = {v: k for k, v in self.column_names.items()}
 
         # Obtener las columnas seleccionadas de la sesión o usar todas por defecto
-        selected_columns = self.request.session.get('selected_columns', all_columns)
+        selected_columns = self.request.session.get('selected_columns', all_columns.values())
         # Obtener los nombres y claves de las columnas seleccionadas en un diccionario con ese orden.
         selected_columns_id = {key: columns_names_reversed[key] for key in selected_columns}
         # Obtener las claves seleccionadas
