@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+
+{%block h1%}
+Registro
+{%endblock%}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Registrar</button>
+  </form>
+{% endblock %}

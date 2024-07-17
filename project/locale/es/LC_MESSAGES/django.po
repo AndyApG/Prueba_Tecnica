@@ -1,0 +1,20 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: es\n"
+
+#: django/contrib/auth/validators.py:21
+msgid "This password is too short. It must contain at least 8 characters."
+msgstr "La contraseña es demasiado corta. Debe contener al menos 8 caracteres."
+
+#: django/contrib/auth/validators.py:23
+msgid "This password is too common."
+msgstr "Esta contraseña es demasiado común."
+
+#: django/contrib/auth/validators.py:25
+msgid "This password is entirely numeric."
+msgstr "La contraseña no puede ser totalmente numérica."
+
+#: django/contrib/auth/forms.py:116
+msgid "The two password fields didn’t match."
+msgstr "Las contraseñas no coinciden."
