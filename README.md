@@ -15,7 +15,7 @@ Aplicación en Django, que permite registrarte iniciar sesión, cargar archivos 
 
 ```bash
     git clone https://github.com/AndyApG/Prueba_Tecnica.git
-    cd nombre-del-repositorio
+    cd Prueba_Tecnica
 ```
 ### 2. Crear y activar un entorno virtual
 ```bash
@@ -27,20 +27,18 @@ Aplicación en Django, que permite registrarte iniciar sesión, cargar archivos 
 ### 3. Instalar las dependencias
 ```bash
 pip install -r requirements.txt
-
+cd project
 ```
-### 4. Crea un superusuario
+### 4. Crea las migraciones
+```bash
+python manage.py make migrate
+```
+### 5. Crea un superusuario
 ```bash
 python manage.py createsuperuser
 
 ```
-### 5. Crea las migraciones y aplicalas
-```bash
-python manage.py make makemigrations
-python manage.py make migrate
-```
-## 5. Correr localmente
+## 6. Correr localmente
 ```bash
 python manage.py runserver
-
 ```
