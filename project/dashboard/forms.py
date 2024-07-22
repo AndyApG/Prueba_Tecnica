@@ -4,11 +4,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 class LoginForm(AuthenticationForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    
+    password = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'] = forms.EmailField(label="Email", widget=forms.TextInput(attrs={'class': 'form-control'}))
+        self.fields['username'] = forms.EmailField()
 
     def clean(self):
         email = self.cleaned_data.get('username')
@@ -24,12 +26,20 @@ class LoginForm(AuthenticationForm):
     def get_user(self):
         return self.user
     
+
+
 class UserForm(UserCreationForm):
-    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
+
+
+    email = forms.EmailField(required=True)
 
     class Meta:
+
+
         model = User
-        fields = ['email', 'password1', 'password2'] 
+        fields = ['email', 
+                  'password1', 
+                  'password2'] 
 
     def save(self, commit=True):
         user = super(UserForm, self).save(commit=False)
@@ -37,7 +47,9 @@ class UserForm(UserCreationForm):
         if commit:
             user.save()
         return user
-    
+
+
+
 class LoadForm(forms.Form):
     file = forms.FileInput()
 

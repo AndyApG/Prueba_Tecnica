@@ -1,13 +1,11 @@
 {% extends "base_generic.html" %}
 
-{%block h1%}
-Iniciar Sesión
+{%block h1%}Iniciar Sesión
 {%endblock%}
 {% block content %}
-  
-  <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
+<form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Login</button>
+</form>
 {% endblock %}

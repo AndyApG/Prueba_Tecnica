@@ -5,29 +5,32 @@ from django.shortcuts import redirect
 from django.core.exceptions import ValidationError
 from django.views import generic, View
 from django.views.generic.edit import FormView
-from .models import Contrato
-from .forms import LoadForm, UserForm, LoginForm
-from .funciones import read_file
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
+from .utilits.read import read_file
+from .forms import LoadForm, UserForm, LoginForm
+from .models.auto import Auto
+from .models.cliente import Cliente
+from .models.contrato import Contrato
 
 
 class LoginEmailView(LoginView):
-    # Vista del formulario para el Login
+   
+
     form_class = LoginForm
     template_name = 'login.html'
-    success_url = reverse_lazy('load') 
-
+    
     def form_valid(self, form):
         user = form.get_user()
         if user:
             login(self.request, user)
-            return HttpResponseRedirect(self.success_url)
+            return redirect('load')
         else:
             return self.form_invalid(form)
-        
+
+
 class RegistroView(FormView):
-    # Vista para el registro del usuario con correo
+   
+
     template_name = 'registro.html'
     form_class = UserForm
     success_url = reverse_lazy('load') 
@@ -37,15 +40,19 @@ class RegistroView(FormView):
         login(self.request, user)
         return super().form_valid(form)
 
+
 class LogoutView(View):
-    #Vista para cerrar sesión
-    def post(self, request):
+    
+    def get(self, request):
         logout(request)
         return redirect('login')
 
+
 class LoadView(LoginRequiredMixin, FormView):
+
+
     form_class = LoadForm
-    template_name = "load.html"  
+    template_name = 'load.html' 
     success_url =  reverse_lazy('datos') 
 
     def form_valid(self, form):
@@ -55,14 +62,16 @@ class LoadView(LoginRequiredMixin, FormView):
             form.add_error(None, e.message)
             return self.form_invalid(form)
         return super().form_valid(form)
-    
-class ContratoView(LoginRequiredMixin,generic.ListView):
+
+
+class ContratoView(LoginRequiredMixin, generic.ListView):
+
+
     model = Contrato
     template_name = 'datos.html'
     context_object_name = 'contratos'
     paginate_by = 20 
 
-    # Diccionario de claves y nombres completos de columnas
     column_names = {
         'nombre': 'Nombres',
         'apellidos': 'Apellidos',
@@ -75,18 +84,15 @@ class ContratoView(LoginRequiredMixin,generic.ListView):
     }
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Definir todas las columnas disponibles
-        all_columns = self.column_names
-        # Cambiamos el orden de las claves y nombres
-        columns_names_reversed = {v: k for k, v in self.column_names.items()}
 
-        # Obtener las columnas seleccionadas de la sesión o usar todas por defecto
+        context = super().get_context_data(**kwargs) 
+        print(context.keys())
+
+        all_columns = self.column_names
+        columns_names_reversed = {v: k for k, v in self.column_names.items()}
         selected_columns = self.request.session.get('selected_columns', all_columns.values())
-        # Obtener los nombres y claves de las columnas seleccionadas en un diccionario con ese orden.
         selected_columns_id = {key: columns_names_reversed[key] for key in selected_columns}
-        # Obtener las claves seleccionadas
+        
         row_data = selected_columns_id.values()
         
         # Si no hay columnas seleccionadas, mostrar todas por defecto
@@ -99,15 +105,24 @@ class ContratoView(LoginRequiredMixin,generic.ListView):
         context['available_columns'] = all_columns.values()
         context['selected_columns'] = selected_columns
         context['rows_data'] = row_data
+
         
         return context
 
     def post(self, request, *args, **kwargs):
-        # Procesar el formulario de selección de columnas
+
+
         selected_columns = request.POST.getlist('columns')
+        request.session['selected_columns'] = selected_columns  
+
+        if('busqueda' in request.POST.getlist('key') ):
+            palabra_buscada = request.POST['busqueda']    
+            request.session['busqueda'] = palabra_buscada
+            nombre_archivo = request.POST['name_report']    
+            request.session['busqueda'] = palabra_buscada
+            print(palabra_buscada, nombre_archivo)
         
-        # Guardar las selecciones en la sesión
-        request.session['selected_columns'] = selected_columns
         
-        # Redirigir a la misma página para evitar el reenvío del formulario
-        return redirect(request.path_info)
+        return redirect(request.path_info) #Redirigir a la misma página para evitar el envio del formulario
+
+   
